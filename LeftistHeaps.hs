@@ -45,8 +45,11 @@ makeT a l r = if rank' l >= rank' r
               then Heap (rank' r + 1) a l r
               else Heap (rank' l + 1) a r l
 
+singleton :: a -> Heap a
+singleton a = Heap 1 a Empty Empty
+
 insert :: Ord a => a -> Heap a -> Heap a
-insert a h = merge (Heap 1 a Empty Empty) h
+insert a h = merge (singleton a) h
 
 findMin :: Heap a -> a
 findMin = element
@@ -56,6 +59,16 @@ deleteMin h = merge (left h) (right h)
 
 -- Ex 3.2
 insert' :: Ord a => a -> Heap a -> Heap a
-insert' a Empty = Heap 1 a Empty Empty
+insert' a Empty = singleton a
 insert' a h | a <= element h = makeT a (left h) (insert' (element h) (right h))
             | otherwise = makeT (element h) (left h) (insert' a (right h))
+
+-- Ex 3.3
+fromList :: Ord a => [a] -> Heap a
+fromList xs = let hs = map singleton xs
+              in head $ until ((1 ==) . length) mergeAdjacent hs
+
+mergeAdjacent :: Ord a => [Heap a] -> [Heap a]
+mergeAdjacent [] = []
+mergeAdjacent (x:[]) = [x]
+mergeAdjacent (x:y:zs) = (merge x y) : (mergeAdjacent zs)
