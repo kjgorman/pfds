@@ -1,6 +1,7 @@
 module BinomialHeap where
 
 data Tree a = Node { rank :: Int, element :: a, children :: [Tree a] }
+            deriving (Show)
 type Heap a = [Tree a]
 
 empty :: Heap a

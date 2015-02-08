@@ -17,7 +17,7 @@ ranks :: Heap a -> [Int]
 ranks h = drop 1 . scanl (\r _ -> r - 1) (rank h) $ trees h
 
 trank :: Tree a -> Int
-trank t | null (children t) = 0
+trank t | null (children t) = 1
         | otherwise = 1 + (maximum $ map trank (children t))
 
 link :: Ord a => Tree a -> Tree a -> Tree a
